@@ -65,6 +65,11 @@ function GameController() {
         gameStatus = `${activePlayer.name}'s Turn`;
         isGameOver = false;
     }
+    const restartGame = (p1_name = "Player 1", p2_name = "Player 2") => {
+        if(isGameOver) return;
+        isGameOver = true;
+        startNewGame(p1_name, p2_name);
+    }
     const getGameStatus = () => gameStatus;
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -141,7 +146,7 @@ function GameController() {
         return result.noWin;
     }
 
-    return { startNewGame, getGameStatus, playRound, getBoard: myBoard.getBoard };
+    return { startNewGame, restartGame, getGameStatus, playRound, getBoard: myBoard.getBoard };
 }
 
 // Screen Controller
@@ -152,6 +157,7 @@ function ScreenController() {
     const boardDiv = document.querySelector('.game-board');
     const gameStatusDiv = document.querySelector('.game-status');
     const gameStartBtn = document.querySelector('.start-btn');
+    const restartBtn = document.querySelector('.restart-btn');
     const nameOne = document.querySelector('.player-one');
     const nameTwo = document.querySelector('.player-two');
 
@@ -208,6 +214,11 @@ function ScreenController() {
 
     gameStartBtn.addEventListener("click", () => {
         game.startNewGame(nameOne.value, nameTwo.value);
+        updateScreen();
+    });
+
+    restartBtn.addEventListener("click", () => {
+        game.restartGame(nameOne.value, nameTwo.value);
         updateScreen();
     });
 
