@@ -34,12 +34,12 @@ function createBoard() {
             return false;
         }
     };
+    const getBoardValues = () => board.map((row) => row.map((cell) => cell.getValue()));
     const printBoard = () => {
-        const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()));
-        console.log(boardWithCellValues);
+        console.log(getBoardValues());
     };
 
-    return { getBoard, placeMarker, printBoard };
+    return { getBoard, getBoardValues, placeMarker, printBoard };
 }
 
 function createCell() {
@@ -62,6 +62,7 @@ function createGameController(p1_name = "Player 1", p2_name = "Player 2") {
     const myBoard = createBoard();
 
     let activePlayer = players[0];
+    let isGameOver = false;
 
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
@@ -72,15 +73,81 @@ function createGameController(p1_name = "Player 1", p2_name = "Player 2") {
         console.log(`${activePlayer.name}'s turn`);
     }
     const playRound = (row, column) => {
+        if (isGameOver) return;
+
         if (myBoard.placeMarker(row, column, getActivePlayer().marker)) {
-            // Check for winner/tie
-            console.log(`${activePlayer.name} placed mark at \nRow:${row} Col:${column}`);
-            switchPlayerTurn();
+            switch (winCheck()) {
+                case 1:
+                    myBoard.printBoard();
+                    console.log(`${activePlayer.name} Won`);
+                    isGameOver = true;
+                    break;
+                case 0:
+                    console.log(`${activePlayer.name} placed mark at \nRow:${row} Col:${column}`);
+                    switchPlayerTurn();
+                    printNewRound();
+                    break;
+                case -1:
+                    myBoard.printBoard();
+                    console.log("It's a Tie");
+                    isGameOver = true;
+                    break;
+                default:
+                    break;
+            }
         }
         else {
             console.log("Invalid Move");
         }
-        printNewRound();
+    }
+
+    function winCheck() {
+        // Check for winner/tie
+        const board = myBoard.getBoardValues();
+        const size = board.length;
+        const result = {
+            "win": 1,
+            "noWin": 0,
+            "tie": -1
+        };
+
+        // Helper to check if all elements in an array are the same and not "0"
+        const allEqual = arr => arr.every(val => val !== "0" && val === arr[0]);
+
+        // Check rows
+        for (let row = 0; row < size; row++) {
+            if (allEqual(board[row])) {
+                return result.win;
+            }
+        }
+
+        // Check columns
+        for (let col = 0; col < size; col++) {
+            const column = board.map(row => row[col]);
+            if (allEqual(column)) {
+                return result.win;
+            }
+        }
+
+        // Check diagonals
+        const mainDiag = board.map((row, i) => row[i]);
+        const antiDiag = board.map((row, i) => row[size - 1 - i]);
+
+        if (allEqual(mainDiag)) {
+            return result.win;
+        }
+
+        if (allEqual(antiDiag)) {
+            return result.win;
+        }
+
+        // Check tie (board full, no "0")
+        const isTie = board.flat().every(cell => cell !== "0");
+        if (isTie) {
+            return result.tie;
+        }
+
+        return result.noWin;
     }
 
     // Initial round
