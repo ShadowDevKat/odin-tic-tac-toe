@@ -1,12 +1,8 @@
-// Base factories
-// Player, game board, game controller
-
-// Factories
-function createPlayer(name, marker) {
+function Player(name, marker) {
     return { name, marker };
 }
 
-function createBoard() {
+function GameBoard() {
     const rows = 3;
     const columns = 3;
     const board = [];
@@ -14,7 +10,7 @@ function createBoard() {
     for (let i = 0; i < rows; i++) {
         board[i] = [];
         for (let j = 0; j < columns; j++) {
-            board[i].push(createCell());
+            board[i].push(Cell());
         }
     }
 
@@ -42,7 +38,7 @@ function createBoard() {
     return { getBoard, getBoardValues, placeMarker, printBoard };
 }
 
-function createCell() {
+function Cell() {
     const defaultValue = '0';
     let value = defaultValue;
     const isEmpty = () => value === defaultValue;
@@ -54,12 +50,12 @@ function createCell() {
     return { setValue, getValue, isEmpty };
 }
 
-function createGameController(p1_name = "Player 1", p2_name = "Player 2") {
+function GameController(p1_name = "Player 1", p2_name = "Player 2") {
     const players = [
-        createPlayer(p1_name, "X"),
-        createPlayer(p2_name, "O")
+        Player(p1_name, "X"),
+        Player(p2_name, "O")
     ];
-    const myBoard = createBoard();
+    const myBoard = GameBoard();
 
     let activePlayer = players[0];
     let isGameOver = false;
@@ -156,5 +152,10 @@ function createGameController(p1_name = "Player 1", p2_name = "Player 2") {
     return { playRound };
 }
 
+// Screen Controller
+function ScreenController() {
+
+}
+
 // Object
-const gameController = createGameController();
+const gameController = GameController();
