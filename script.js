@@ -46,19 +46,20 @@ function Cell() {
     return { setValue, getValue, reset, isEmpty };
 }
 
-function GameController(p1_name = "Player 1", p2_name = "Player 2") {
-    const players = [
-        Player(p1_name, "X"),
-        Player(p2_name, "O")
-    ];
+function GameController() {
+    let players = [];
     const myBoard = GameBoard();
 
-    let activePlayer = players[0];
+    let activePlayer = null;
     let gameStatus = 'Press start game';
     let isGameOver = true;
 
-    const startNewGame = () => {
+    const startNewGame = (p1_name = "Player 1", p2_name = "Player 2") => {
         if (!isGameOver) return;
+        players = [
+            Player(p1_name, "X"),
+            Player(p2_name, "O")
+        ];
         myBoard.resetBoard();
         activePlayer = players[0];
         gameStatus = `${activePlayer.name}'s Turn`;
@@ -145,12 +146,34 @@ function GameController(p1_name = "Player 1", p2_name = "Player 2") {
 
 // Screen Controller
 function ScreenController() {
+    // Grab dom elements
     const game = GameController();
 
-    // Grab dom elements
     const boardDiv = document.querySelector('.game-board');
     const gameStatusDiv = document.querySelector('.game-status');
     const gameStartBtn = document.querySelector('.start-btn');
+    const nameOne = document.querySelector('.player-one');
+    const nameTwo = document.querySelector('.player-two');
+
+    // Name input handling
+    [nameOne, nameTwo].forEach((input, index) => {
+        const marker = index === 0 ? "(X)" : "(O)";
+        const defaultName = index === 0 ? "Player 1" : "Player 2";
+        const defaultValue = `${marker} ${defaultName}`;
+
+        input.addEventListener("focus", () => {
+            if (input.value === defaultValue) {
+                input.value = `${marker} `;
+            }
+        });
+
+        input.addEventListener("blur", () => {
+            if (input.value === `${marker} `) {
+                input.value = defaultValue;
+            }
+        });
+    });
+
 
     // Create board elements
     const updateScreen = () => {
@@ -184,7 +207,7 @@ function ScreenController() {
     });
 
     gameStartBtn.addEventListener("click", () => {
-        game.startNewGame();
+        game.startNewGame(nameOne.value, nameTwo.value);
         updateScreen();
     });
 
