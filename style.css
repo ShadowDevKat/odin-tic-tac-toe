@@ -11,14 +11,83 @@ li {
 }
 
 :root {
-    --default-color: #2e3440;
-    --primary-color: #4c566a;
-    --secondary-color: #a3be8c;
+    --floral-white: #fffcf2ff;
+    --timber-wolf: #ccc5b9ff;
+    --black-olive: #403d39ff;
+    --eerie-black: #252422ff;
 
-    font: 10px Roboto, sans-serif;
+    font: 20px Roboto, sans-serif;
+    color: white;
 }
 
 body {
-    background-color: var(--default-color);
+    background-color: var(--floral-white);
     height: 100vh;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 6fr 1fr 1fr;
+}
+
+.header,
+.game-status,
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header {
+    background-color: var(--eerie-black);
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.game-board {
+    background-color: var(--eerie-black);
+    height: 90%;
+    aspect-ratio: 1 / 1;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.2rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.board-btn,
+.start-btn {
+    width: 100%;
+    height: 100%;
+    font-size: 1.5rem;
+    border: none;
+    background-color: var(--floral-white);
+    cursor: pointer;
+}
+
+.board-btn:hover,
+.start-btn:hover {
+    background-color: var(--timber-wolf);
+}
+
+.board-btn:active,
+.start-btn:active {
+    transform: scale(0.98);
+}
+
+.game-status {
+    background-color: var(--black-olive);
+    font-size: 1.2rem;
+}
+
+.footer {
+    background-color: var(--eerie-black);
+}
+
+.start-btn {
+    width: auto;
+    height: auto;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    border-radius: 1rem;
 }
